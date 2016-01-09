@@ -39,10 +39,10 @@ $ npm install solve-banded
 
 #### `require('solve-banded')(d, nsub, nsup, x, nx[, ox = 1[, sx = 1]])`
 **Arguments**:
-- `d`: an array of diagonal bands, starting with with the subdiagonal-most band (a in the example matrix above) and proceeding to the superdiagonal-most band (d in the example matrix above). Each vector must be a javascript `Array` or typed array of length `n`.
+- `d`: an array of diagonal bands, starting with with the subdiagonal-most band (a in the example matrix above) and proceeding to the superdiagonal-most band (d in the example matrix above). Each vector must be a javascript `Array` or typed array of length `nx`.
 - `nsub`: an integer representing the number of subdiagonal bands, excluding the diagonal.
 - `nsup`: an integer representing the number of superdiagonal bands, excluding the diagonal.
-- `x`: a javascript `Array` or typed array of length n representing the known vector (e in the example matrix above). On successful completion, this vector will contain the solution.
+- `x`: a javascript `Array` or typed array of length `nx` representing the known vector (e in the example matrix above). On successful completion, this vector will contain the solution.
 - `nx`: an integer representing the number of equations, i.e. the length of `x`.
 - `ox` (optional): an integer representing the offset of data in `x`. If not provided, assumed equal to zero.
 - `sx` (optional): an integer representing the stride of data in `x`. If not provided, assumed equal to one.
