@@ -6,8 +6,6 @@
 
 This module accepts javascript Arrays or typed arrays representing the bands of a banded matrix and computes the solution using the Thomas Algorithm. A system with one subdiagonal and two superdiagonal bands, for example, looks like:
 
-Note that the solver accepts a stride and offset for the input/output vector (`x`, below), so that a system can be solved in-place in an ndarray. The coefficient matrix does not currently accept strides or offsets and must be passed as individual vectors.
-
 $$
 \left[
 \begin{matrix}
@@ -45,7 +43,8 @@ $$
 \right].
 $$
 
-The solver will fail if the matrix is singular and may not succeed if the matrix is not diagonally dominant. If the solver fails, it will log a console message and return false.
+The solver will fail if the matrix is singular and may not succeed if the matrix is not diagonally dominant. If the solver fails, it will log a console message and return false.  Note that the solver accepts a stride and offset for the input/output vector (`x`, below), so that a system can be solved in-place in an ndarray. The coefficient matrix does not currently accept strides or offsets and must be passed as individual vectors.
+
 
 ## Example
 
