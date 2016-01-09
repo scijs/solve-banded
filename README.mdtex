@@ -1,0 +1,111 @@
+# solve-banded [![Build Status](https://travis-ci.org/scijs/solve-banded.svg)](https://travis-ci.org/scijs/solve-banded) [![npm version](https://badge.fury.io/js/solve-banded.svg)](https://badge.fury.io/js/solve-banded) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+
+> Solve a system of banded linear equations
+
+## Introduction
+
+This module accepts javascript Arrays or typed arrays representing the bands of a banded matrix and computes the solution using the Thomas Algorithm. A system with one subdiagonal and two superdiagonal bands, for example, looks like:
+
+Note that the solver accepts a stride and offset for the input/output vector (`x`, below), so that a system can be solved in-place in an ndarray. The coefficient matrix does not currently accept strides or offsets and must be passed as individual vectors.
+
+$$
+\left[
+\begin{matrix}
+   {b_0}   &   {c_0}   &   {d_0}   &   {   }   &   {  }        &   { }         &   { 0 } \\
+   {a_1}   &   {b_1}   &   {c_1}   &   {d_1}   &   {  }        &   { }         &   {   } \\
+   {   }   &   {a_2}   &   {b_2}   &   \cdot   &   \cdot       &   { }         &   {   } \\
+   {   }   &   {   }   &   \cdot   &   \cdot   &   \cdot       &   {d_{n-4}}   &   {   } \\
+   {   }   &   {   }   &   {   }   &   \cdot   &   {b_{n-3}}   &   {c_{n-3}}   &   {d_{n-3}} \\
+   {   }   &   {   }   &   {   }   &   { }     &   {a_{n-2}}   &   {b_{n-2}}   &   {c_{n-2}}\\
+   { 0 }   &   {   }   &   {   }   &   { }     &   {   }       &   {a_{n-1}}   &   {b_{n-1}}\\
+\end{matrix}
+\right]
+\left[
+\begin{matrix}
+   {x_0 }  \\
+   {x_1 }  \\
+   \cdot   \\
+   \cdot   \\
+   \cdot   \\
+   {x_{n-2} } \\
+   {x_{n-1} }  \\
+\end{matrix}
+\right]
+=
+\left[
+\begin{matrix}
+   {e_0 }  \\
+   {e_1 }  \\
+   \cdot   \\
+   \cdot   \\
+   \cdot   \\
+   {e_{n-2} }  \\
+   {e_{n-1} }  \\
+\end{matrix}
+\right].
+$$
+
+The solver will fail if the matrix is singular and may not succeed if the matrix is not diagonally dominant. If the solver fails, it will log a console message and return false.
+
+## Example
+
+Consider the solution of the tridiagonal system
+
+$$
+\left[
+\begin{matrix}
+   2 & 1 &  0 \\
+  -1 & 7 &  4 \\
+   0 & 2 & -3 \\
+\end{matrix}
+\right]
+\left[
+\begin{matrix}
+   {x_0 }  \\
+   {x_1 }  \\
+   {x_2 }  \\
+\end{matrix}
+\right]
+=
+\left[
+\begin{matrix}
+   {4}  \\
+   {25}  \\
+   {-5}  \\
+\end{matrix}
+\right].
+$$
+
+```javascript
+var solveBanded = require('solve-banded')
+
+var e = [4, 25, -5]
+
+solveBanded([[0, -1, 2], [2, 7, -3], [1, 4, 0]], 1, 1, e, 3)
+
+console.log(e)
+// => e = [ 1, 2, 3 ]
+```
+
+## Installation
+
+```javascript
+$ npm install solve-banded
+```
+
+## API
+
+#### `require('solve-banded')(d, nsub, nsup, x, nx[, ox = 1[, sx = 1]])`
+**Arguments**:
+- `d`: an array of diagonal bands, starting with with the subdiagonal-most band (a in the example matrix above) and proceeding to the superdiagonal-most band (d in the example matrix above). Each vector must be a javascript `Array` or typed array of length `n`.
+- `nsub`: an integer representing the number of subdiagonal bands, excluding the diagonal.
+- `nsup`: an integer representing the number of superdiagonal bands, excluding the diagonal.
+- `x`: a javascript `Array` or typed array of length n representing the known vector (e in the example matrix above). On successful completion, this vector will contain the solution.
+- `nx`: an integer representing the number of equations, i.e. the length of `x`.
+- `ox` (optional): an integer representing the offset of data in `x`. If not provided, assumed equal to zero.
+- `sx` (optional): an integer representing the stride of data in `x`. If not provided, assumed equal to one.
+
+**Returns**: True on successful completion, false otherwise.
+
+## License
+&copy; 2016 Ricky Reusser. MIT License.
